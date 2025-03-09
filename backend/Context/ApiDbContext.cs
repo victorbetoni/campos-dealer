@@ -6,6 +6,6 @@ namespace backend.Context {
         public ApiDbContext(DbContextOptions<ApiDbContext> options) : base(options) {
         }
 
-        public DbSet<Cliente> Clientes { get; set; }
+        public DbSet<Customer> Customers { get; set; }
     }
 }
