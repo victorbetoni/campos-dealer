@@ -2,8 +2,7 @@
 using backend.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace backend.Repository
-{
+namespace backend.Repository {
     public class CustomerRepository: IRepository{
 
         private readonly ApiDbContext _context;

@@ -1,6 +1,5 @@
 ﻿using backend.Model;
 using backend.Repository;
-using static backend.Usecase.Customers.CreateCustomerUsecase;
 
 namespace backend.Usecase.Customers
 {
@@ -25,10 +24,7 @@ namespace backend.Usecase.Customers
                 };
             } catch (Exception ex) {
                 _logger.LogError(ex, "Erro ao buscar clientes");
-                return new OpResponse<List<Customer>> {
-                    Status = 500,
-                    Message = "Algo deu errado! Tente novamente.",
-                };
+                return Utils.Responses.DefaultInternalServerError<List<Customer>>();
             }
         }
     }

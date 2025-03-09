@@ -25,10 +25,7 @@ namespace backend.Usecase.Customers
                 };
             } catch (Exception ex) {
                 _logger.LogError(ex, "Erro ao atualizar cliente");
-                return new OpResponse<Customer> {
-                    Status = 500,
-                    Message = "Algo deu errado! Tente novamente.",
-                };
+                return Utils.Responses.DefaultInternalServerError<Customer>();
             }
         }
 

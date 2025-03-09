@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Any;
 namespace backend.Controllers;
 
 [ApiController]
-[Route("/Sites/TesteAPI/cliente")]
+[Route("/cliente")]
 public class CustomerController : ControllerBase {
 
     private readonly CustomerRepository _clienteRepository;
@@ -21,69 +21,47 @@ public class CustomerController : ControllerBase {
     }
 
     [HttpPost]
-    public OpResponse<Customer> Post([FromBody] Customer cliente) {
+    public OpResponse<Customer> Post([FromBody] CreateCustomerUsecase.Input cliente) {
         // Poderia utilizar um middleware para fazer essa validação
         if (!ModelState.IsValid) {
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
-            return new OpResponse<Customer>() {
-                Status = 400,
-                Errors = errors,
-                Message = "Preencha todos os campos corretamente."
-            };
+            return Utils.Responses.DefaultFillAllFields<Customer>(errors);
         }
 
-        var input = new CreateCustomerUsecase.Input {
-            Name = cliente.Name,
-            County = cliente.County
-        };
-
-        if (string.IsNullOrEmpty(input.Name) || string.IsNullOrEmpty(input.County)) {
-            return new OpResponse<Customer> {
-                Status = 400,
-                Message = "Preencha todos os campos corretamente."
-            };
+        if (!Utils.AllFilled(cliente.Name, cliente.County)) {
+            return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-        var res = new CreateCustomerUsecase(_logger, _clienteRepository, input).Run();
+        var res = new CreateCustomerUsecase(_logger, _clienteRepository, cliente).Run();
         return res;
     }
 
     [HttpGet]
     public OpResponse<List<Customer>> Get() {
         var nameFilter = Request.Query["name"];
-        var page = 1;
-        if (!Request.Query["page"].IsNullOrEmpty()){
-            try {
-                page = int.Parse(Request.Query["page"]);
-            } catch (Exception ex) {
-                page = 1;
-            }
-        }
+        
+        var page = Utils.QueryOrDefaultInt(HttpContext, "page", 1);
+
         var input = new ListCustomerUsecase.Input{
             NameFilter = nameFilter,
             Page = page
         };
+
         var res = new ListCustomerUsecase(_logger, _clienteRepository, input).Run();
         return res;
     }
 
     [HttpPut]
     public OpResponse<Customer> Put([FromBody] Customer cliente) {
-        
+
         if (!ModelState.IsValid) {
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
-            return new OpResponse<Customer>() {
-                Status = 400,
-                Errors = errors,
-                Message = "Preencha todos os campos corretamente."
-            };
+            return Utils.Responses.DefaultFillAllFields<Customer>(errors);
         }
 
-        if (string.IsNullOrEmpty(cliente.Name) || string.IsNullOrEmpty(cliente.County)) {
-            return new OpResponse<Customer> {
-                Status = 400,
-                Message = "Preencha todos os campos corretamente."
-            };
+
+        if (!Utils.AllFilled(cliente.Name, cliente.County)) {
+            return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
 

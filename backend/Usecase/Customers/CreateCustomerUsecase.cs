@@ -18,13 +18,6 @@ namespace backend.Usecase.Customers {
                 County = _input.County.Trim()
             };
 
-            if (string.IsNullOrEmpty(cliente.Name) || string.IsNullOrEmpty(cliente.County)) {
-                return new OpResponse<Customer> {
-                    Status = 400,
-                    Message = "Preencha todos os campos corretamente."
-                };
-            }
-
             try {
                 _repository.New(cliente);
                 return new OpResponse<Customer> {
@@ -34,10 +27,7 @@ namespace backend.Usecase.Customers {
                 };
             } catch (Exception ex) {
                 _logger.LogError(ex, "Erro ao criar cliente");
-                return new OpResponse<Customer> {
-                    Status = 500,
-                    Message = "Algo deu errado! Tente novamente.",
-                };
+                return Utils.Responses.DefaultInternalServerError<Customer>();
             }
 
         }

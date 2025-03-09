@@ -1,9 +1,9 @@
 ﻿using backend.Model;
 using backend.Repository;
 
-namespace backend.Usecase.Customers {
-    public class DeleteCustomerUsecase : UsecaseBase<CustomerRepository, DeleteCustomerUsecase.Input, object>{
-        public DeleteCustomerUsecase(ILogger<object> logger, CustomerRepository repository, DeleteCustomerUsecase.Input input) : base(logger, repository, input) {
+namespace backend.Usecase.Products {
+    public class DeleteProductUsecase : UsecaseBase<ProductRepository, DeleteProductUsecase.Input, object>{
+        public DeleteProductUsecase(ILogger<object> logger, ProductRepository repository, DeleteProductUsecase.Input input) : base(logger, repository, input) {
         }
 
         public class Input {
@@ -15,10 +15,10 @@ namespace backend.Usecase.Customers {
                 _repository.Delete(_input.id);
                 return new OpResponse<object> {
                     Status = 200,
-                    Message = "Cliente deletado com sucesso!"
+                    Message = "Produto deletado com sucesso!"
                 };
             } catch (Exception ex) {
-                _logger.LogError(ex, "Erro ao deletar cliente");
+                _logger.LogError(ex, "Erro ao deletar produto");
                 return Utils.Responses.DefaultInternalServerError<object>();
             }
         }
