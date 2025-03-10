@@ -16,6 +16,7 @@ namespace backend.Usecase {
             _input = input;
         }
 
-        public abstract OpResponse<O> Run();
+        public abstract Task<OpResponse<O>> Run();
+
     }
 }

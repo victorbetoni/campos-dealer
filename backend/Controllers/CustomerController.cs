@@ -5,6 +5,7 @@ using backend.Usecase.Customers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
+using System.Threading.Tasks;
 
 namespace backend.Controllers;
 
@@ -21,7 +22,7 @@ public class CustomerController : ControllerBase {
     }
 
     [HttpPost]
-    public OpResponse<Customer> Post([FromBody] CreateCustomerUsecase.Input cliente) {
+    public async Task<OpResponse<Customer>> Post([FromBody] CreateCustomerUsecase.Input cliente) {
         // Poderia utilizar um middleware para fazer essa validação
         if (!ModelState.IsValid) {
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
@@ -32,12 +33,12 @@ public class CustomerController : ControllerBase {
             return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-        var res = new CreateCustomerUsecase(_logger, _clienteRepository, cliente).Run();
+        var res = await new CreateCustomerUsecase(_logger, _clienteRepository, cliente).Run();
         return res;
     }
 
     [HttpGet]
-    public OpResponse<List<Customer>> Get() {
+    public async Task<OpResponse<List<Customer>>> Get() {
         var nameFilter = Request.Query["name"];
         
         var page = Utils.QueryOrDefaultInt(HttpContext, "page", 1);
@@ -47,31 +48,26 @@ public class CustomerController : ControllerBase {
             Page = page
         };
 
-        var res = new ListCustomerUsecase(_logger, _clienteRepository, input).Run();
-        return res;
+        return await new ListCustomerUsecase(_logger, _clienteRepository, input).Run();
     }
 
     [HttpPut]
-    public OpResponse<Customer> Put([FromBody] Customer cliente) {
+    public async Task<OpResponse<Customer>> Put([FromBody] Customer cliente) {
 
         if (!ModelState.IsValid) {
             var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
             return Utils.Responses.DefaultFillAllFields<Customer>(errors);
         }
 
-
         if (!Utils.AllFilled(cliente.Name, cliente.County)) {
             return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-
-        var res = new UpdateCustomerUsecase(_logger, _clienteRepository, cliente).Run();
-        return res;
+        return await new UpdateCustomerUsecase(_logger, _clienteRepository, cliente).Run(); ;
     }
 
     [HttpDelete]
-    public OpResponse<object> Delete([FromBody] DeleteCustomerUsecase.Input id)  {
-        var res = new DeleteCustomerUsecase(_logger, _clienteRepository, id).Run();
-        return res;
+    public async Task<OpResponse<object>> Delete([FromBody] DeleteCustomerUsecase.Input id)  {
+        return await new DeleteCustomerUsecase(_logger, _clienteRepository, id).Run();
     }
 }

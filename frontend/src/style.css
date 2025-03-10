@@ -45,4 +45,20 @@
     @apply text-gray-600 font-normal text-sm p-2
   }
 
+  .popup {
+    @apply absolute w-96 p-8 rounded-lg shadow-md bg-white z-10 left-[40%] top-1/3 h-fit border-[2px] border-yellow-300
+  }
+
+  .popup p {
+    @apply text-sm font-light text-center
+  }
+
+  .confirm-button {
+    @apply px-2 py-2 text-white bg-yellow-500 hover:bg-yellow-600 rounded-md
+  }
+
+  .cancel-button {
+    @apply px-2 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md
+  }
+
 }

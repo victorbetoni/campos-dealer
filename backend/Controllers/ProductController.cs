@@ -4,6 +4,7 @@ using backend.Repository;
 using backend.Usecase.Customers;
 using backend.Usecase.Products;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace backend.Controllers {
 
@@ -20,7 +21,7 @@ namespace backend.Controllers {
         }
 
         [HttpPost]
-        public OpResponse<Product> Post([FromBody] CreateProductUsecase.Input input) {
+        public async Task<OpResponse<Product>> Post([FromBody] CreateProductUsecase.Input input) {
             // Poderia utilizar um middleware para fazer essa validação
             if (!ModelState.IsValid) {
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
@@ -31,12 +32,18 @@ namespace backend.Controllers {
                 return Utils.Responses.DefaultFillAllFields<Product>();
             }
 
-            var res = new CreateProductUsecase(_logger, _productRepository, input).Run();
-            return res;
+            if (input.UnitaryPrice <= 0 || input.UnitaryPrice > 3.40e+38f) {
+                return new OpResponse<Product> {
+                    Status = 400,
+                    Message = "Preço inválido."
+                };
+            }
+
+            return await new CreateProductUsecase(_logger, _productRepository, input).Run();
         }
 
         [HttpGet]
-        public OpResponse<List<Product>> Get() {
+        public async Task<OpResponse<List<Product>>> Get() {
             var descFilter = Request.Query["desc"];
 
             var page = Utils.QueryOrDefaultInt(HttpContext, "page", 1);
@@ -46,18 +53,16 @@ namespace backend.Controllers {
                 Page = page
             };
 
-            var res = new ListProductUsecase(_logger, _productRepository, input).Run();
-            return res;
+            return await new ListProductUsecase(_logger, _productRepository, input).Run();
         }
 
         [HttpDelete]
-        public OpResponse<object> Delete([FromBody] DeleteProductUsecase.Input id) {
-            var res = new DeleteProductUsecase(_logger, _productRepository, id).Run();
-            return res;
+        public async Task<OpResponse<object>> Delete([FromBody] DeleteProductUsecase.Input id) {
+            return await new DeleteProductUsecase(_logger, _productRepository, id).Run();
         }
 
         [HttpPut]
-        public OpResponse<Product> Put([FromBody] Product product) {
+        public async Task<OpResponse<Product>> Put([FromBody] Product product) {
             if (!ModelState.IsValid) {
                 var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray();
                 return Utils.Responses.DefaultFillAllFields<Product>(errors);
@@ -67,8 +72,7 @@ namespace backend.Controllers {
                 return Utils.Responses.DefaultFillAllFields<Product>();
             }
 
-            var res = new UpdateProductUsecase(_logger, _productRepository, product).Run();
-            return res;
+            return await new UpdateProductUsecase(_logger, _productRepository, product).Run();
         }
     }
 }

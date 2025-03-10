@@ -10,9 +10,9 @@ namespace backend.Usecase.Customers {
             public int id { get; set; }
         }
 
-        public override OpResponse<object> Run() {
+        public override async Task<OpResponse<object>> Run() {
             try {
-                _repository.Delete(_input.id);
+                await _repository.Delete(_input.id);
                 return new OpResponse<object> {
                     Status = 200,
                     Message = "Cliente deletado com sucesso!"

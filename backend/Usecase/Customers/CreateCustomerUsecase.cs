@@ -11,7 +11,7 @@ namespace backend.Usecase.Customers {
             public string County { get; set; }
         }
 
-        public override OpResponse<Customer> Run() {
+        public override async Task<OpResponse<Customer>> Run() {
 
             var cliente = new Customer {
                 Name = _input.Name.Trim(),
@@ -19,7 +19,7 @@ namespace backend.Usecase.Customers {
             };
 
             try {
-                _repository.New(cliente);
+                await _repository.New(cliente, false);
                 return new OpResponse<Customer> {
                     Status = 200,
                     Message = "Cliente criado com sucesso!",

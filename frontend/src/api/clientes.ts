@@ -1,7 +1,7 @@
 import type Cliente from "../model/Cliente";
 import { APIRequest, DELETE, GET, POST, PUT, type Handler } from "./api";
 
-const CLIENTE_CONTROLLER = "Sites/TesteAPI/cliente"
+const CLIENTE_CONTROLLER = "cliente"
 
 export function createCliente(cidade: string, nome: string, handler: Handler<Cliente>) {
   POST(new APIRequest(CLIENTE_CONTROLLER, null, ({

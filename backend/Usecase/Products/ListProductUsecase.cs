@@ -15,9 +15,9 @@ namespace backend.Usecase.Products {
             public int Page { get; set; }
         }
 
-        public override OpResponse<List<Product>> Run() {
+        public override async Task<OpResponse<List<Product>>> Run() {
             try {
-                var products = _repository.FindByDesc(_input.DescFilter, _input.Page, DEFAULT_PAGE_SIZE);
+                var products = await _repository.FindByDesc(_input.DescFilter, _input.Page, DEFAULT_PAGE_SIZE);
                 return new OpResponse<List<Product>> {
                     Status = 200,
                     Message = _input.Page + "",

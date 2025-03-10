@@ -9,7 +9,7 @@ namespace backend.Usecase.Customers
         public UpdateCustomerUsecase(ILogger<object> logger, CustomerRepository repository, Customer input) : base(logger, repository, input) {
         }
 
-        public override OpResponse<Customer> Run() {
+        public override async Task<OpResponse<Customer>> Run() {
 
             var cliente = new Customer {
                 Name = _input.Name.Trim(),
@@ -17,7 +17,7 @@ namespace backend.Usecase.Customers
             };
 
             try {
-                _repository.Update(_input);
+                await _repository.Update(_input);
                 return new OpResponse<Customer> {
                     Status = 200,
                     Message = "Cliente atualizado com sucesso!",

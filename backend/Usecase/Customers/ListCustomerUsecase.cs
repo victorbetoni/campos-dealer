@@ -14,9 +14,9 @@ namespace backend.Usecase.Customers
             public int Page { get; set; }
         }
 
-        public override OpResponse<List<Customer>> Run() {
+        public override async Task<OpResponse<List<Customer>>> Run() {
             try {
-                var clientes = _repository.FindByName(_input.NameFilter, _input.Page, DEFAULT_PAGE_SIZE);
+                var clientes = await _repository.FindByName(_input.NameFilter, _input.Page, DEFAULT_PAGE_SIZE);
                 return new OpResponse<List<Customer>> {
                     Status = 200,
                     Message = _input.Page + "",

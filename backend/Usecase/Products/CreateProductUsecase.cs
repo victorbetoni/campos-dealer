@@ -11,7 +11,7 @@ namespace backend.Usecase.Products {
             public float UnitaryPrice { get; set; }
         }
 
-        public override OpResponse<Product> Run() {
+        public override async Task<OpResponse<Product>> Run() {
 
             var product = new Product {
                 Description = _input.Description.Trim(),
@@ -19,7 +19,7 @@ namespace backend.Usecase.Products {
             };
 
             try {
-                _repository.New(product);
+                await _repository.New(product, false);
                 return new OpResponse<Product> {
                     Status = 200,
                     Message = "Cliente criado com sucesso!",

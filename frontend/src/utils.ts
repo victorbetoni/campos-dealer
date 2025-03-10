@@ -1,0 +1,16 @@
+export const DEFAULT_CURRENCY_PROPS = {
+  prefix: 'R$ ',
+  suffix: '',
+  thousands: '.',
+  decimal: ',',
+  number: true,
+  precision: 2,
+  disableNegative: false,
+  disabled: false,
+  min: null,
+  max: null,
+  allowBlank: false,
+  minimumNumberOfCharacters: 0,
+  shouldRound: true,
+  focusOnRight: false,
+};

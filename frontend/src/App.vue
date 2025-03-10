@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import Clientes from './components/view/Clientes.vue';
+import Produtos from './components/view/Produtos.vue';
+import CreateProduto from './components/view/produtos/CreateProduto.vue';
+import ListProdutos from './components/view/produtos/ListProdutos.vue';
 </script>
 
 <template>
-    <Clientes/>
+    <Produtos/>
 </template>
