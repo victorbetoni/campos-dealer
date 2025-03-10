@@ -1,9 +1,10 @@
-﻿using backend.Model;
+﻿using backend.Context;
+using backend.Model;
 using backend.Repository;
 
 namespace backend.Usecase.Products {
-    public class CreateProductUsecase : UsecaseBase<ProductRepository, CreateProductUsecase.Input, Product> {
-        public CreateProductUsecase(ILogger<object> logger, ProductRepository repository, Input input) : base(logger, repository, input) {
+    public class CreateProductUsecase : UsecaseBase<CreateProductUsecase.Input, Product> {
+        public CreateProductUsecase(ILogger<object> logger, ApiDbContext ctx, Input input) : base(logger, ctx, input) {
         }
 
         public class Input {
@@ -19,7 +20,7 @@ namespace backend.Usecase.Products {
             };
 
             try {
-                await _repository.New(product, false);
+                await new ProductRepository(_context).New(product, false);
                 return new OpResponse<Product> {
                     Status = 200,
                     Message = "Cliente criado com sucesso!",

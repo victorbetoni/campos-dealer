@@ -2,6 +2,7 @@ using backend.Context;
 using backend.Model;
 using backend.Repository;
 using backend.Usecase.Customers;
+using backend.Usecase.Sales;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
@@ -13,12 +14,12 @@ namespace backend.Controllers;
 [Route("/cliente")]
 public class CustomerController : ControllerBase {
 
-    private readonly CustomerRepository _clienteRepository;
     private readonly ILogger<CustomerController> _logger;
+    private ApiDbContext _context;
 
     public CustomerController(ILogger<CustomerController> logger, ApiDbContext context) {
         _logger = logger;
-        this._clienteRepository = new CustomerRepository(context);
+        _context = context;
     }
 
     [HttpPost]
@@ -33,7 +34,7 @@ public class CustomerController : ControllerBase {
             return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-        var res = await new CreateCustomerUsecase(_logger, _clienteRepository, cliente).Run();
+        var res = await new CreateCustomerUsecase(_logger, _context, cliente).Run();
         return res;
     }
 
@@ -48,7 +49,7 @@ public class CustomerController : ControllerBase {
             Page = page
         };
 
-        return await new ListCustomerUsecase(_logger, _clienteRepository, input).Run();
+        return await new ListCustomerUsecase(_logger, _context, input).Run();
     }
 
     [HttpPut]
@@ -63,11 +64,11 @@ public class CustomerController : ControllerBase {
             return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-        return await new UpdateCustomerUsecase(_logger, _clienteRepository, cliente).Run(); ;
+        return await new UpdateCustomerUsecase(_logger, _context, cliente).Run(); ;
     }
 
     [HttpDelete]
     public async Task<OpResponse<object>> Delete([FromBody] DeleteCustomerUsecase.Input id)  {
-        return await new DeleteCustomerUsecase(_logger, _clienteRepository, id).Run();
+        return await new DeleteCustomerUsecase(_logger, _context, id).Run();
     }
 }

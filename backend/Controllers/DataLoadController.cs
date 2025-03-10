@@ -49,17 +49,17 @@ namespace backend.Controllers {
 
                 try
                 {
-                    if (!(await new ResetProductTablesUsecase(_logger, new ProductRepository(_context), new object { }).Run()).Ok())
+                    if (!(await new ResetProductTablesUsecase(_logger, _context, new object { }).Run()).Ok())
                     {
                         return Utils.Responses.DefaultInternalServerError<object>();
                     }
 
-                    if (!(await new ResetCustomersTablesUsecase(_logger, new CustomerRepository(_context), new object { }).Run()).Ok())
+                    if (!(await new ResetCustomersTablesUsecase(_logger, _context, new object { }).Run()).Ok())
                     {
                         return Utils.Responses.DefaultInternalServerError<object>();
                     }
 
-                    if (!(await new ResetProductTablesUsecase(_logger, new ProductRepository(_context), new object { }).Run()).Ok())
+                    if (!(await new ResetProductTablesUsecase(_logger, _context, new object { }).Run()).Ok())
                     {
                         return Utils.Responses.DefaultInternalServerError<object>();
                     }
@@ -68,7 +68,7 @@ namespace backend.Controllers {
                     var prodRes = await client.GetStringAsync(productsUrl);
                     var products = JsonConvert.DeserializeObject<List<ProductInput>>(prodRes.Trim('"').Replace("\\", ""));
                     var prodMapped = products.Select(pr => new Product { Id = pr.idProduto, Description = pr.dscProduto, UnitaryPrice = pr.vlrUnitario }).ToList();
-                    var prodResult = await new BulkCreateProductsUsecase(_logger, new ProductRepository(_context), prodMapped).Run();
+                    var prodResult = await new BulkCreateProductsUsecase(_logger, _context, prodMapped).Run();
                     if (!prodResult.Ok())
                     {
                         return prodResult;
@@ -77,7 +77,7 @@ namespace backend.Controllers {
                     var custsRes = await client.GetStringAsync(custsUrl);
                     var customers = JsonConvert.DeserializeObject<List<CustomerInput>>(custsRes.Trim('"').Replace("\\", ""));
                     var custMapped = customers.Select(pr => new Customer { Id = pr.idCliente, Name = pr.nmCliente, County = pr.Cidade }).ToList();
-                    var custResult = await new BulkCreateCustomersUsecase(_logger, new CustomerRepository(_context), custMapped).Run();
+                    var custResult = await new BulkCreateCustomersUsecase(_logger, _context, custMapped).Run();
                     if (!custResult.Ok())
                     {
                         return custResult;

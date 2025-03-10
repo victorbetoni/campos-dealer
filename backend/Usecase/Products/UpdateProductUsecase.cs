@@ -1,18 +1,18 @@
-﻿using backend.Model;
+﻿using backend.Context;
+using backend.Model;
 using backend.Repository;
-using Microsoft.AspNetCore.Components.Forms;
-
 namespace backend.Usecase.Products {
-    public class UpdateProductUsecase : UsecaseBase<ProductRepository, Product, Product> {
-        public UpdateProductUsecase(ILogger<object> logger, ProductRepository repository, Product input) : base(logger, repository, input) {
+    public class UpdateProductUsecase : UsecaseBase<Product, Product> {
+        public UpdateProductUsecase(ILogger<object> logger, ApiDbContext ctx, Product input) : base(logger, ctx, input) {
         }
 
         public override async Task<OpResponse<Product>> Run() {
             try {
-                await _repository.Update(_input);
+
+                await new ProductRepository(_context).Update(_input);
                 return new OpResponse<Product> {
                     Status = 200,
-                    Message = "Produto atualizado com sucesso!",
+                    Message = "Venda atualizada com sucesso!",
                     Data = _input
                 };
             } catch (Exception ex) {

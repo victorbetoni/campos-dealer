@@ -4,6 +4,7 @@ using backend.Repository;
 using backend.Usecase.Customers;
 using backend.Usecase.Products;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace backend.Controllers {
@@ -12,12 +13,12 @@ namespace backend.Controllers {
     [Route("/produto")]
     public class ProductController : ControllerBase {
 
-        private readonly ProductRepository _productRepository;
+        private readonly ApiDbContext _context;
         private readonly ILogger<ProductController> _logger;
 
         public ProductController(ILogger<ProductController> logger, ApiDbContext context) {
             _logger = logger;
-            this._productRepository = new ProductRepository(context);
+            _context = context;
         }
 
         [HttpPost]
@@ -39,7 +40,7 @@ namespace backend.Controllers {
                 };
             }
 
-            return await new CreateProductUsecase(_logger, _productRepository, input).Run();
+            return await new CreateProductUsecase(_logger, _context, input).Run();
         }
 
         [HttpGet]
@@ -53,12 +54,12 @@ namespace backend.Controllers {
                 Page = page
             };
 
-            return await new ListProductUsecase(_logger, _productRepository, input).Run();
+            return await new ListProductUsecase(_logger, _context, input).Run();
         }
 
         [HttpDelete]
         public async Task<OpResponse<object>> Delete([FromBody] DeleteProductUsecase.Input id) {
-            return await new DeleteProductUsecase(_logger, _productRepository, id).Run();
+            return await new DeleteProductUsecase(_logger, _context, id).Run();
         }
 
         [HttpPut]
@@ -72,7 +73,7 @@ namespace backend.Controllers {
                 return Utils.Responses.DefaultFillAllFields<Product>();
             }
 
-            return await new UpdateProductUsecase(_logger, _productRepository, product).Run();
+            return await new UpdateProductUsecase(_logger, _context, product).Run();
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using backend.Model;
+﻿using backend.Context;
+using backend.Model;
 using backend.Repository;
 using backend.Usecase.Customers;
 
 namespace backend.Usecase.Products {
-    public class ListProductUsecase : UsecaseBase<ProductRepository, ListProductUsecase.Input, List<Product>> {
-        public ListProductUsecase(ILogger<object> logger, ProductRepository repository, Input input) : base(logger, repository, input)
+    public class ListProductUsecase : UsecaseBase<ListProductUsecase.Input, List<Product>> {
+        public ListProductUsecase(ILogger<object> logger, ApiDbContext ctx, Input input) : base(logger, ctx, input)
         {
         }
 
@@ -17,7 +18,7 @@ namespace backend.Usecase.Products {
 
         public override async Task<OpResponse<List<Product>>> Run() {
             try {
-                var products = await _repository.FindByDesc(_input.DescFilter, _input.Page, DEFAULT_PAGE_SIZE);
+                var products = await new ProductRepository(_context).FindByDesc(_input.DescFilter, _input.Page, DEFAULT_PAGE_SIZE);
                 return new OpResponse<List<Product>> {
                     Status = 200,
                     Message = _input.Page + "",

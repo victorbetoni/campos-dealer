@@ -15,6 +15,11 @@ namespace backend.Repository {
             _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         }
 
+        public async Task<Product> FindById(int id) {
+            var product = await _context.Products.FindAsync((long)id);
+            return product;
+        }
+
         public async Task<List<Product>> FindByDesc(string desc, int page, int limit) {
             var products = await _context.Products
                 .Where(e => EF.Functions.Like(e.Description, "%" + desc + "%"))

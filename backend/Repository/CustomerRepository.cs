@@ -17,6 +17,11 @@ namespace backend.Repository {
             _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
         }
 
+        public async Task<Customer> FindById(int id) {
+            var cliente = await _context.Customers.FindAsync((long)id);
+            return cliente;
+        }
+
         public async Task<List<Customer>> FindByName(string name, int page, int limit) {
             var customers = await _context.Customers
                 .Where(e => EF.Functions.Like(e.Name, "%" + name + "%"))
