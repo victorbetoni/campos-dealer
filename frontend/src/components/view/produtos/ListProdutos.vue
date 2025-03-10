@@ -24,67 +24,44 @@ const waitingRemoval = ref<Produto | undefined>(undefined)
 
 const currencyProps = ref(DEFAULT_CURRENCY_PROPS);
 
+
 function goForwards() {
-  if(lastFilter.value != filter.value) {
-    page.value = 1;
-  }
   page.value++;
   previousPage.value = [...currentPage.value];
   currentPage.value = nextPage.value;
-  fetchProducts(page.value + 1, filter.value, (r) => {
-    if(r.status != 200) {
-      r.errors.forEach(x => toast.error(x));
-      toast.error(r.message);
-      return;
-    }
-    nextPage.value = r.data!;
-  })
+  fetchPage(1, x => nextPage.value = x);
 }
 
 function goBackwards() {
   if(page.value == 1) {
     return;
   }
-  if(lastFilter.value != filter.value) {
-    page.value = 1;
-  }
   page.value--;
   nextPage.value = [...currentPage.value];
   currentPage.value = [...previousPage.value];
-  fetchProducts(page.value - 1, filter.value, (r) => {
-    if(r.status != 200) {
-      r.errors.forEach(x => toast.error(x));
-      toast.error(r.message);
-      return;
-    }
-    previousPage.value = r.data!;
-  })
+  fetchPage(-1, x => previousPage.value = x);
 }
 
-function submit(first: boolean) {
+function fetchPage(offset: number, then: (v: Produto[]) => void) {
   if(lastFilter.value != filter.value) {
     page.value = 1;
+    lastFilter.value = filter.value;
   }
-  if(first) {
-    fetchProducts(page.value, filter.value, (c) => {
+  fetchProducts(page.value + offset, filter.value, (c) => {
       if(c.status != 200) {
         c.errors.forEach(x => toast.error(x));
         toast.error(c.message);
         return;
       }
-      currentPage.value = c.data!;
-      // Deixa a proxima pagina em cache
-      fetchProducts(page.value + 1, filter.value, (c2) => {
-        if(c2.status != 200) {
-          c2.errors.forEach(x => toast.error(x));
-          toast.error(c2.message);
-          return;
-        }
-        nextPage.value = c2.data!;
-      })
+      then(c.data!);
     })
-    return;
-  } 
+}
+
+function submit(first: boolean) {
+  fetchPage(0, x => currentPage.value = x);
+  if(first) {
+    fetchPage(1, x => nextPage.value = x);
+  }
 }
 
 function remove() {

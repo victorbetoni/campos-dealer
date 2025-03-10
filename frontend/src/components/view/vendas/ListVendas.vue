@@ -36,7 +36,7 @@ function goForwards() {
   page.value++;
   previousPage.value = [...currentPage.value];
   currentPage.value = nextPage.value;
-  fetchPage(0, x => nextPage.value = x);
+  fetchPage(1, x => nextPage.value = x);
 }
 
 function goBackwards() {
@@ -46,7 +46,7 @@ function goBackwards() {
   page.value--;
   nextPage.value = [...currentPage.value];
   currentPage.value = [...previousPage.value];
-  fetchPage(0, x => previousPage.value = x);
+  fetchPage(-1, x => previousPage.value = x);
 }
 
 function fetchPage(offset: number, then: (v: Venda[]) => void) {
