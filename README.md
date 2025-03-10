@@ -8,7 +8,7 @@
 
 
 ### Pontuações técnicas:
-- Como não havia tempo o suficiente e não estava no escopo do projeto, não foi implementada as funcionalidades de autenticação e autorização, apesar de ser algo indispensável em uma API desse tipo em produção.
+- Como não havia tempo o suficiente e não estava no escopo do projeto, não foi implementada as funcionalidades de autenticação e autorização.
 -  Os endpoints para a importação de dados aparentam ficar fora do ar em alguns momentos do dia, principalmente a noite. A funcionalidade de importação de dados não funcionará caso o endpoint não esteja disponível no momento que esse programa for testado.
 
 ### Pontuações gerais:
