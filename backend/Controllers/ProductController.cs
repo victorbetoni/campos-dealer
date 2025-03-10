@@ -40,7 +40,9 @@ namespace backend.Controllers {
                 };
             }
 
-            return await new CreateProductUsecase(_logger, _context, input).Run();
+            var res = await new CreateProductUsecase(_logger, _context, input).Run();
+            HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
 
         [HttpGet]
@@ -54,12 +56,16 @@ namespace backend.Controllers {
                 Page = page
             };
 
-            return await new ListProductUsecase(_logger, _context, input).Run();
+            var res = await new ListProductUsecase(_logger, _context, input).Run();
+            HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
 
         [HttpDelete]
         public async Task<OpResponse<object>> Delete([FromBody] DeleteProductUsecase.Input id) {
-            return await new DeleteProductUsecase(_logger, _context, id).Run();
+            var res = await new DeleteProductUsecase(_logger, _context, id).Run();
+            HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
 
         [HttpPut]
@@ -73,7 +79,9 @@ namespace backend.Controllers {
                 return Utils.Responses.DefaultFillAllFields<Product>();
             }
 
-            return await new UpdateProductUsecase(_logger, _context, product).Run();
+            var res = await new UpdateProductUsecase(_logger, _context, product).Run();
+            HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
     }
 }

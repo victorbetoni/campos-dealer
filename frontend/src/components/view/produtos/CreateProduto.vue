@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useToast } from 'vue-toastification';
-import { createProduto } from '../../../api/produtos';
+import { createProduct } from '../../../api/produtos';
 import { DEFAULT_CURRENCY_PROPS } from '../../../utils';
 
 const toast = useToast();
@@ -21,7 +21,7 @@ function submit() {
     return;
   }
 
-  createProduto(desc.value, parsedPrice, (resp) => {
+  createProduct(desc.value, parsedPrice, (resp) => {
     if(resp.status != 200) {
       toast.error(resp.message);
       return;

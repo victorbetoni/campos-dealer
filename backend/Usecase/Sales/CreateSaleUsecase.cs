@@ -39,13 +39,13 @@ namespace backend.Usecase.Sales {
                 }
 
                 var total = product.UnitaryPrice * _input.Quantity;
-                var date = DateTime.Now;
+                var date = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
                 var sale = new Sale {
                     Product = product,
                     Customer = customer,
                     Quantity = _input.Quantity,
-                    Total = (decimal) total,
+                    Total = total,
                     Date = date,
                     CustomerId = _input.CustomerId,
                     ProductId = _input.ProductId,

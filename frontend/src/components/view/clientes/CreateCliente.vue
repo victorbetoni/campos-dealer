@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { createCliente } from '../../../api/clientes';
+import { createCustomer } from '../../../api/clientes';
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -26,7 +26,7 @@ function submit() {
   }
 
   let cidade = municipio.value + "/" + estado.value;
-  createCliente(cidade, nome.value, (resp) => {
+  createCustomer(cidade, nome.value, (resp) => {
     if(resp.status == 400) {
       toast.error("Preencha todos os campos!");
       return;

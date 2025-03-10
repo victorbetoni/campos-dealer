@@ -35,6 +35,7 @@ public class CustomerController : ControllerBase {
         }
 
         var res = await new CreateCustomerUsecase(_logger, _context, cliente).Run();
+        HttpContext.Response.StatusCode = res.Status;
         return res;
     }
 
@@ -49,7 +50,9 @@ public class CustomerController : ControllerBase {
             Page = page
         };
 
-        return await new ListCustomerUsecase(_logger, _context, input).Run();
+        var res = await new ListCustomerUsecase(_logger, _context, input).Run();
+        HttpContext.Response.StatusCode = res.Status;
+        return res;
     }
 
     [HttpPut]
@@ -64,11 +67,15 @@ public class CustomerController : ControllerBase {
             return Utils.Responses.DefaultFillAllFields<Customer>();
         }
 
-        return await new UpdateCustomerUsecase(_logger, _context, cliente).Run(); ;
+        var res = await new UpdateCustomerUsecase(_logger, _context, cliente).Run();HttpContext.Response.StatusCode = res.Status;
+        HttpContext.Response.StatusCode = res.Status;
+        return res;
     }
 
     [HttpDelete]
     public async Task<OpResponse<object>> Delete([FromBody] DeleteCustomerUsecase.Input id)  {
-        return await new DeleteCustomerUsecase(_logger, _context, id).Run();
+        var res = await new DeleteCustomerUsecase(_logger, _context, id).Run();
+        HttpContext.Response.StatusCode = res.Status;
+        return res;
     }
 }

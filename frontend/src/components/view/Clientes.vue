@@ -2,10 +2,12 @@
 import { ref } from 'vue';
 import CreateCliente from './clientes/CreateCliente.vue';
 import ListClientes from './clientes/ListClientes.vue';
+import { redirectAndRefresh } from '../../utils';
+import { useRouter } from 'vue-router';
 
 
 const option = ref(0)
-
+const router = useRouter();
 </script>
 
 <template>
@@ -17,6 +19,9 @@ const option = ref(0)
         </div>
         <div :class="[option == 1 ? 'bg-indigo-600' : 'bg-indigo-400']" class="tab" @click="option = 1">
           <p>Listar Clientes</p>
+        </div>
+        <div @click="redirectAndRefresh('/', router)" class="tab bg-orange-400 hover:bg-orange-500">
+          <p>Voltar</p>
         </div>
       </div>
       <div class="w-full h-full p-8 bg-white border-[1px] border-indigo-400 rounded-lg mt-2 shadow-lg">

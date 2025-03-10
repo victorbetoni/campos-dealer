@@ -1,6 +1,7 @@
 ﻿using backend.Context;
 using backend.Model;
 using backend.Repository;
+using System.Transactions;
 
 namespace backend.Usecase.Customers {
     public class DeleteCustomerUsecase : UsecaseBase<DeleteCustomerUsecase.Input, object>{
@@ -12,15 +13,19 @@ namespace backend.Usecase.Customers {
         }
 
         public override async Task<OpResponse<object>> Run() {
-            try {
-                await new CustomerRepository(_context).Delete(_input.id);
-                return new OpResponse<object> {
-                    Status = 200,
-                    Message = "Cliente deletado com sucesso!"
-                };
-            } catch (Exception ex) {
-                _logger.LogError(ex, "Erro ao deletar cliente");
-                return Utils.Responses.DefaultInternalServerError<object>();
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled)) {
+                try {
+                    await new SalesRepository(_context).DeleteWithCustomer(_input.id);
+                    await new CustomerRepository(_context).Delete(_input.id);
+                    scope.Complete();
+                    return new OpResponse<object> {
+                        Status = 200,
+                        Message = "Cliente deletado com sucesso!"
+                    };
+                } catch (Exception ex) {
+                    _logger.LogError(ex, "Erro ao deletar cliente");
+                    return Utils.Responses.DefaultInternalServerError<object>();
+                }
             }
         }
     }

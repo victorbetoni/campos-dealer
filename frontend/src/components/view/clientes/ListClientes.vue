@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type Cliente from '../../../model/Cliente';
-import { deleteCliente, fetchClientes, updateCliente } from '../../../api/clientes';
+import { deleteCustomer, fetchCustomers, updateCustomer } from '../../../api/clientes';
 import { useToast } from 'vue-toastification';
-import Clientes from '../Clientes.vue';
 
 const toast = useToast();
 
@@ -36,7 +35,7 @@ function goForwards() {
   page.value++;
   previousPage.value = [...currentPage.value];
   currentPage.value = nextPage.value;
-  fetchClientes(page.value + 1, filter.value, (r) => {
+  fetchCustomers(page.value + 1, filter.value, (r) => {
     if(r.status != 200) {
       r.errors.forEach(x => toast.error(x));
       toast.error(r.message);
@@ -56,7 +55,7 @@ function goBackwards() {
   page.value--;
   nextPage.value = [...currentPage.value];
   currentPage.value = [...previousPage.value];
-  fetchClientes(page.value - 1, filter.value, (r) => {
+  fetchCustomers(page.value - 1, filter.value, (r) => {
     if(r.status != 200) {
       r.errors.forEach(x => toast.error(x));
       toast.error(r.message);
@@ -71,7 +70,7 @@ function submit(first: boolean) {
     page.value = 1;
   }
   if(first) {
-    fetchClientes(page.value, filter.value, (c) => {
+    fetchCustomers(page.value, filter.value, (c) => {
       if(c.status != 200) {
         c.errors.forEach(x => toast.error(x));
         toast.error(c.message);
@@ -79,7 +78,7 @@ function submit(first: boolean) {
       }
       currentPage.value = c.data!;
       // Deixa a proxima pagina em cache
-      fetchClientes(page.value + 1, filter.value, (c2) => {
+      fetchCustomers(page.value + 1, filter.value, (c2) => {
         if(c2.status != 200) {
           c2.errors.forEach(x => toast.error(x));
           toast.error(c2.message);
@@ -98,7 +97,7 @@ function remove() {
   if(waitingRemoval == undefined) {
     return;
   }
-  deleteCliente(waitingRemoval.value!.id, (resp) => {
+  deleteCustomer(waitingRemoval.value!.id, (resp) => {
     if(resp.status != 200) {
       resp.errors.forEach(x => toast.error(x));
       toast.error(resp.message);
@@ -128,7 +127,7 @@ function clearEdit() {
 
 function saveEditing() {
   let newCidade = editingCounty.value + "/" + editingUF.value;
-  updateCliente(({id: editingCust.value!.id, county: newCidade, name: editingName.value}), (resp) => {
+  updateCustomer(({id: editingCust.value!.id, county: newCidade, name: editingName.value}), (resp) => {
     if(resp.status != 200) {
       resp.errors.forEach(x => toast.error(x));
       toast.error(resp.message);

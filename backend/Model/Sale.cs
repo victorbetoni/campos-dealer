@@ -1,18 +1,21 @@
-﻿using backend.Migrations;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Model
 {
     public class Sale
     {
-        public int Id { get; set; }
-        public int CustomerId { get; set; }
-        public int ProductId { get; set; }
+        public long Id { get; set; }
+        public long CustomerId { get; set; }
+        public long ProductId { get; set; }
         public int Quantity { get; set; }
         public double UnitaryValue { get; set; }
-        public DateTime Date { get; set; }
-        public decimal Total { get; set; }
+        public long Date { get; set; }
+        public float Total { get; set; }
+
+        [ForeignKey("ProductId")]
         public Product Product { get; set; }
+
+        [ForeignKey("CustomerId")]
         public Customer Customer { get; set; }
     }
 }

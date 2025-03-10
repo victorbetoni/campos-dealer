@@ -15,19 +15,24 @@ namespace backend.Repository {
             _context.Database.ExecuteSqlRaw("DELETE FROM Products");
         }
 
-        public async Task<Product> FindById(int id) {
+        public async Task<Product> FindById(long id) {
             var product = await _context.Products.FindAsync((long)id);
             return product;
         }
 
         public async Task<List<Product>> FindByDesc(string desc, int page, int limit) {
-            var products = await _context.Products
+            if(page < 0) {
+                return await _context.Products
+                    .Where(e => EF.Functions.Like(e.Description, "%" + desc + "%"))
+                    .OrderBy(c => c.Id)
+                    .ToListAsync();
+            }
+            return await _context.Products
                 .Where(e => EF.Functions.Like(e.Description, "%" + desc + "%"))
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .OrderBy(c => c.Id)
                 .ToListAsync();
-            return products;
         }
 
         public async Task<Product> New(Product product, bool forceIdColumn) {

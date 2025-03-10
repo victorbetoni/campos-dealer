@@ -2,13 +2,11 @@
 import { ref } from 'vue';
 import type Produto from '../../../model/Produto';
 import { useToast } from 'vue-toastification';
-import { deleteProduto, fetchProdutos, updateProduto } from '../../../api/produtos';
-import { DEFAULT_CURRENCY_PROPS } from '../../../utils';
+import { deleteProduct, fetchProducts, updateProduct } from '../../../api/produtos';
+import { DEFAULT_CURRENCY_PROPS, formatCurrency } from '../../../utils';
 
 const toast = useToast();
 
-const ufs = ref([]);
-const counties = ref([]);
 const filter = ref("");
 const lastFilter = ref("");
 
@@ -33,7 +31,7 @@ function goForwards() {
   page.value++;
   previousPage.value = [...currentPage.value];
   currentPage.value = nextPage.value;
-  fetchProdutos(page.value + 1, filter.value, (r) => {
+  fetchProducts(page.value + 1, filter.value, (r) => {
     if(r.status != 200) {
       r.errors.forEach(x => toast.error(x));
       toast.error(r.message);
@@ -53,7 +51,7 @@ function goBackwards() {
   page.value--;
   nextPage.value = [...currentPage.value];
   currentPage.value = [...previousPage.value];
-  fetchProdutos(page.value - 1, filter.value, (r) => {
+  fetchProducts(page.value - 1, filter.value, (r) => {
     if(r.status != 200) {
       r.errors.forEach(x => toast.error(x));
       toast.error(r.message);
@@ -68,7 +66,7 @@ function submit(first: boolean) {
     page.value = 1;
   }
   if(first) {
-    fetchProdutos(page.value, filter.value, (c) => {
+    fetchProducts(page.value, filter.value, (c) => {
       if(c.status != 200) {
         c.errors.forEach(x => toast.error(x));
         toast.error(c.message);
@@ -76,7 +74,7 @@ function submit(first: boolean) {
       }
       currentPage.value = c.data!;
       // Deixa a proxima pagina em cache
-      fetchProdutos(page.value + 1, filter.value, (c2) => {
+      fetchProducts(page.value + 1, filter.value, (c2) => {
         if(c2.status != 200) {
           c2.errors.forEach(x => toast.error(x));
           toast.error(c2.message);
@@ -89,18 +87,11 @@ function submit(first: boolean) {
   } 
 }
 
-function formatCurrency(price: number): string {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(price);
-}
-
 function remove() {
   if(waitingRemoval == undefined) {
     return;
   }
-  deleteProduto(waitingRemoval.value!.id, (resp) => {
+  deleteProduct(waitingRemoval.value!.id, (resp) => {
     if(resp.status != 200) {
       resp.errors.forEach(x => toast.error(x));
       toast.error(resp.message);
@@ -127,7 +118,7 @@ function clearEdit() {
 function saveEditing() {
   const parsedPrice = parseFloat(editingPrice.value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim());
   const newProduct = {id: editingProduct.value!.id, description: editingDescription.value, unitaryPrice: parsedPrice};
-  updateProduto(newProduct, (resp) => {
+  updateProduct(newProduct, (resp) => {
     if(resp.status != 200) {
       resp.errors.forEach(x => toast.error(x));
       toast.error(resp.message);

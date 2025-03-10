@@ -17,19 +17,24 @@ namespace backend.Repository {
             _context.Database.ExecuteSqlRaw("DELETE FROM Customers");
         }
 
-        public async Task<Customer> FindById(int id) {
+        public async Task<Customer> FindById(long id) {
             var cliente = await _context.Customers.FindAsync((long)id);
             return cliente;
         }
 
         public async Task<List<Customer>> FindByName(string name, int page, int limit) {
-            var customers = await _context.Customers
+            if (page < 0) {
+                return await _context.Customers
+                    .Where(e => EF.Functions.Like(e.Name, "%" + name + "%"))
+                    .OrderBy(c => c.Id)
+                    .ToListAsync();
+            }
+            return await _context.Customers
                 .Where(e => EF.Functions.Like(e.Name, "%" + name + "%"))
                 .Skip((page - 1) * limit)
                 .Take(limit)
                 .OrderBy(c => c.Id)
                 .ToListAsync();
-            return customers;
         }
 
         public async Task<Customer> New(Customer cliente, bool forceIdColumn) {

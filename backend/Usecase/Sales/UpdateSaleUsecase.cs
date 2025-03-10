@@ -31,9 +31,18 @@ namespace backend.Usecase.Sales {
                 }
 
                 var total = product.UnitaryPrice * _input.Quantity;
-                _input.Total = (decimal)total;
+                _input.UnitaryValue = product.UnitaryPrice;
+                _input.Total = total;
 
-                await new SalesRepository(_context).Update(_input);
+                var existingSale = await saleRepo.FindById(_input.Id);
+                if (existingSale != null) {
+                    _context.Entry(existingSale).CurrentValues.SetValues(_input);
+                } else {
+                    await saleRepo.Update(_input);
+                }
+
+                await _context.SaveChangesAsync();
+
                 return new OpResponse<Sale> {
                     Status = 200,
                     Message = "Produto atualizado com sucesso!",
