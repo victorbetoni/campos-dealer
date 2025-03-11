@@ -3,7 +3,7 @@
 - Padrão de projeto: MVC com repositórios e pattern de Usecases para separar a camada de negócio.
 
 ### Instalação:
-- Backend: abrir a solução no Visual Studio e rodar na configuração HTTP. A API ficará disponível em http://localhost:5141 caso a porta esteja disponível. Além disso, talvez seja necessário trocar a propriedade DefaultConnection no appsettings.json dependendo de seu ambiente.
+- Backend: abrir a solução no Visual Studio e rodar na configuração HTTP. A API ficará disponível em http://localhost:5141 caso a porta esteja disponível. Além disso, talvez seja necessário trocar a propriedade DefaultConnection no appsettings.json dependendo de seu ambiente. OBS: Caso a aplicação rode em uma porta diferente da 5141, é necessário alterar a mesma no arquivo .env na pasta do frontend.
 - Frontend: Dentro da pasta do frontend, executar: `npm i` e `npm run dev`. O frontend ficará disponível em http://localhost:5173 caso a porta esteja disponível.  
 
 
@@ -23,3 +23,4 @@
 - Middleware para fazer validação de dados
 - Caching no frontend e backend com alguma tecnologia apropriada para economizar tempo de busca
 - Responsividade no frontend
+- Dockerização da aplicação
