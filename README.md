@@ -1,4 +1,4 @@
-# Victor Hugo Betoni - Teste Técnico Campos Dealer
+# Victor Hugo Betoni
 - Tecnologias utilizadas: Git, TypeScript, Vue.js, Vue Router, TailwindCSS, Vite, .NET e Entity Framework
 - Padrão de projeto: MVC com repositórios e pattern de Usecases para separar a camada de negócio.
 
